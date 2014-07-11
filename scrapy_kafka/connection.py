@@ -1,20 +1,15 @@
-from kazoo.client import KazooClient
-from samsa.cluster import Cluster
+#from kazoo.client import KazooClient
+#from samsa.cluster import Cluster
+from kafka.client import KafkaClient
+from kafka.producer import SimpleProducer
 
 # defaulf values
-ZOOKEEPER_HOSTS = ['localhost:2181',]
-KAFKA_TOPIC = 'scrapy_kafka_pipeline'
-KAFKA_CONSUMER_GROUP = 'scrapy_kafka'
+KAFKA_HOSTS = ['localhost:9092']
+KAFKA_TOPIC = 'scrapy_kafka_item'
 
 def from_settings(settings):
-    zk_hosts = settings.get('ZOOKEEPER_HOSTS',ZOOKEEPER_HOSTS)
-    zk_hosts = ",".join(zk_hosts)    
-
+    k_hosts = settings.get('KAFKA_HOSTS',KAFKA_HOSTS)
     topic = settings.get('KAFKA_TOPIC',KAFKA_TOPIC)
-    consumer_group = settings.get('KAFKA_CONSUMER_GROUP',KAFKA_CONSUMER_GROUP)
-    
-    zk = KazooClient(zk_hosts)
-    zk.start()
-    cluster = Cluster(zk)
-    return cluster
-
+    kafka = KafkaClient(k_hosts)
+    producer = SimpleProducer(kafka)
+    return producer,topic
