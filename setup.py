@@ -12,7 +12,7 @@ setup(name='scrapy-kafka',
         url='https://github.com/dfdeshom/scrapy-kafka',
         packages=['scrapy_kafka'],
         license='BSD',
-        install_requires=['Scrapy>=0.24.2', 'kafka-python>=0.9.0', 'kazoo==2.0'],
+        install_requires=['Scrapy>=0.24.2', 'kafka-python>=0.9.0',],
         classifiers=[
         'Programming Language :: Python',
         'Development Status :: 4 - Beta',
