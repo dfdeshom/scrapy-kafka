@@ -8,8 +8,15 @@ from kafka.consumer import SimpleConsumer
 
 class KafkaSpiderMixin(object):
     """Mixin class to implement reading urls from a kafka queue."""
-    topic = None
+    kafka_topic = None
 
+    def process_kafka_message(self,message):
+        """" Tell this spider how to extract urls from a kafka message  """
+        if not message:
+            return None
+        
+        return message.message.value
+        
     def setup_kafka(self,settings):
         """Setup redis connection and idle signal.
 
@@ -23,40 +30,21 @@ class KafkaSpiderMixin(object):
         _kafka = KafkaClient(hosts)
         # wait atr most 1sec for more messages. Otherwise contiunue
         self.consumer = SimpleConsumer(_kafka,consumer_group,self.topic,
-                                       auto_commit=False, iter_timeout=1.0)
+                                       auto_commit=True, iter_timeout=1.0)
         # idle signal is called when the spider has no requests left,
         # that's when we will schedule new requests from kafka topic
         self.crawler.signals.connect(self.spider_idle, signal=signals.spider_idle)
         self.crawler.signals.connect(self.item_scraped, signal=signals.item_scraped)
-        self.log("Reading URLs from kafka topic '%s'" % self.topic)
-
-    # def start_requests(self):
-    #     for om in self.consumer:
-    #         url = om.message.value
-    #         if url:
-    #             print 'url ', url
-    #             yield self.make_requests_from_url(url)
-            
-        
+        self.log("Reading URLs from kafka topic '%s'" % self.kafka_topic)
+                    
     def next_request(self):
         """Returns a request to be scheduled or none."""
-        #message = self.consumer.get_messages(1)[0]
         message = self.consumer.get_message(True)
-        print 'msg ', message
-        if not message:
-            return None
-        
-        url = message.message.value
+        url = self.process_kafka_message(message)
         if not url:
             return None
-        print 'url is ', url
+        #print 'url is ', url
         return self.make_requests_from_url(url)
-        
-        # for om in self.consumer:
-        #     url = om.message.value
-        #     print 'url ', url
-        #     if url:
-        #         return self.make_requests_from_url(url)
                 
     def schedule_next_request(self):
         """Schedules a request if available"""
@@ -74,9 +62,21 @@ class KafkaSpiderMixin(object):
         self.schedule_next_request()
 
 
-class KafkaSpider(KafkaSpiderMixin, Spider):
-    """Spider that reads urls from redis queue when idle."""
+class ListeningKafkaSpider(KafkaSpiderMixin, Spider):
+    """
+    Spider that reads urls from a kafka topic when idle.
+    
+    This spider will exit only it stopped, otherwise, it keeps
+    listening to messages on the given topic
 
+    Specify the topic to listen to by setting the spider's `kafka_topic`.
+
+    Messages are assumed to be URLS, one by message. To do custom
+    processing of kafka messages, override the spider's `process_kafka_message`
+    method
+    """
+    kafka_topic = None
+    
     def set_crawler(self, crawler):
-        super(KafkaSpider, self).set_crawler(crawler)
+        super(ListeningKafkaSpider, self).set_crawler(crawler)
         self.setup_kafka(crawler.settings)
