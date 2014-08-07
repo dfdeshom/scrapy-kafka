@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from scrapy_kafka.spiders import KafkaSpider
-from example.items import DmozItem
+from scrapy_kafka.spiders import ListeningKafkaSpider
+from ..items import DmozItem
 
 
-class CustomKafkaSpider(KafkaSpider):
+class CustomKafkaSpider(ListeningKafkaSpider):
     name = "dmoz_kafka"
     allowed_domains = ["dmoz.org"]
 
