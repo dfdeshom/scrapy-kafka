@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from scrapy import signals
 from scrapy.exceptions import DontCloseSpider
 from scrapy.spider import Spider

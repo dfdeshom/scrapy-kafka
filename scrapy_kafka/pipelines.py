@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from scrapy.utils.serialize import ScrapyJSONEncoder
 
 from kafka.client import KafkaClient
