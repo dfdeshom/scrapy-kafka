@@ -11,12 +11,11 @@
 BOT_NAME = 'example'
 
 SPIDER_MODULES = ['example.spiders']
-NEWSPIDER_MODULE = 'example.spiders'
+NEWSPIDER_MODULE = SPIDER_MODULES[0]
 ITEM_PIPELINES = [
-        'example.pipelines.ExamplePipeline',
-        'scrapy_kafka.pipelines.KafkaPipeline',
-    ]
+    'example.pipelines.ExamplePipeline',
+    'scrapy_kafka.pipelines.KafkaPipeline',
+]
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'example (+http://www.yourdomain.com)'
-    
+# USER_AGENT = 'example (+http://www.yourdomain.com)'

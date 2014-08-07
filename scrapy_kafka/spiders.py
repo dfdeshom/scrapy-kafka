@@ -1,23 +1,23 @@
 from scrapy import signals
-from scrapy import log
 from scrapy.exceptions import DontCloseSpider
 from scrapy.spider import Spider
 
 from kafka.client import KafkaClient
 from kafka.consumer import SimpleConsumer
 
+
 class KafkaSpiderMixin(object):
     """Mixin class to implement reading urls from a kafka queue."""
     kafka_topic = None
 
-    def process_kafka_message(self,message):
+    def process_kafka_message(self, message):
         """" Tell this spider how to extract urls from a kafka message  """
         if not message:
             return None
-        
+
         return message.message.value
-        
-    def setup_kafka(self,settings):
+
+    def setup_kafka(self, settings):
         """Setup redis connection and idle signal.
 
         This should be called after the spider has set its crawler object.
@@ -25,27 +25,26 @@ class KafkaSpiderMixin(object):
         if not self.topic:
             self.topic = '%s-starturls' % self.name
 
-        hosts = settings.get('SCRAPY_KAFKA_HOSTS',['localhost:9092'])
-        consumer_group = settings.get('SCRAPY_KAFKA_SPIDER_CONSUMER_GROUP','scrapy-kafka')
+        hosts = settings.get('SCRAPY_KAFKA_HOSTS', ['localhost:9092'])
+        consumer_group = settings.get('SCRAPY_KAFKA_SPIDER_CONSUMER_GROUP', 'scrapy-kafka')
         _kafka = KafkaClient(hosts)
-        # wait atr most 1sec for more messages. Otherwise contiunue
-        self.consumer = SimpleConsumer(_kafka,consumer_group,self.topic,
+        # wait at most 1sec for more messages. Otherwise continue
+        self.consumer = SimpleConsumer(_kafka, consumer_group, self.topic,
                                        auto_commit=True, iter_timeout=1.0)
         # idle signal is called when the spider has no requests left,
         # that's when we will schedule new requests from kafka topic
         self.crawler.signals.connect(self.spider_idle, signal=signals.spider_idle)
         self.crawler.signals.connect(self.item_scraped, signal=signals.item_scraped)
         self.log("Reading URLs from kafka topic '%s'" % self.kafka_topic)
-                    
+
     def next_request(self):
         """Returns a request to be scheduled or none."""
         message = self.consumer.get_message(True)
         url = self.process_kafka_message(message)
         if not url:
             return None
-        #print 'url is ', url
         return self.make_requests_from_url(url)
-                
+
     def schedule_next_request(self):
         """Schedules a request if available"""
         req = self.next_request()
@@ -65,7 +64,7 @@ class KafkaSpiderMixin(object):
 class ListeningKafkaSpider(KafkaSpiderMixin, Spider):
     """
     Spider that reads urls from a kafka topic when idle.
-    
+
     This spider will exit only it stopped, otherwise, it keeps
     listening to messages on the given topic
 
@@ -76,7 +75,7 @@ class ListeningKafkaSpider(KafkaSpiderMixin, Spider):
     method
     """
     kafka_topic = None
-    
+
     def set_crawler(self, crawler):
         super(ListeningKafkaSpider, self).set_crawler(crawler)
         self.setup_kafka(crawler.settings)
