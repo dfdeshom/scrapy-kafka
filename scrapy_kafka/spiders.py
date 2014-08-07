@@ -8,11 +8,20 @@ from kafka.consumer import SimpleConsumer
 
 
 class KafkaSpiderMixin(object):
-    """Mixin class to implement reading urls from a kafka queue."""
+    """
+    Mixin class to implement reading urls from a kafka queue.
+
+    :type kafka_topic: str
+    """
     kafka_topic = None
 
     def process_kafka_message(self, message):
-        """" Tell this spider how to extract urls from a kafka message  """
+        """"
+        Tell this spider how to extract urls from a kafka message
+
+        :type message: kafka.common.OffsetAndMessage
+        :rtype: str or None
+        """
         if not message:
             return None
 
@@ -22,6 +31,8 @@ class KafkaSpiderMixin(object):
         """Setup redis connection and idle signal.
 
         This should be called after the spider has set its crawler object.
+
+        :type settings: scrapy.settings.Settings
         """
         if not self.topic:
             self.topic = '%s-starturls' % self.name
@@ -39,7 +50,11 @@ class KafkaSpiderMixin(object):
         self.log("Reading URLs from kafka topic '%s'" % self.kafka_topic)
 
     def next_request(self):
-        """Returns a request to be scheduled or none."""
+        """
+        Returns a request to be scheduled or none.
+
+        :rtype: str or None
+        """
         message = self.consumer.get_message(True)
         url = self.process_kafka_message(message)
         if not url:
@@ -75,8 +90,10 @@ class ListeningKafkaSpider(KafkaSpiderMixin, Spider):
     processing of kafka messages, override the spider's `process_kafka_message`
     method
     """
-    kafka_topic = None
 
     def set_crawler(self, crawler):
+        """
+        :type crawler: scrapy.crawler.Crawler
+        """
         super(ListeningKafkaSpider, self).set_crawler(crawler)
         self.setup_kafka(crawler.settings)
