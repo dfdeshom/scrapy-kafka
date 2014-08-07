@@ -34,7 +34,7 @@ class KafkaSpiderMixin(object):
 
         :type settings: scrapy.settings.Settings
         """
-        if not self.topic:
+        if not hasattr(self, 'topic') or not self.topic:
             self.topic = '%s-starturls' % self.name
 
         hosts = settings.get('SCRAPY_KAFKA_HOSTS', ['localhost:9092'])
