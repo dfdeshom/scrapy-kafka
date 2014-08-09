@@ -1,12 +1,12 @@
-import scrapy
+# -*- coding: utf-8 -*-
+from scrapy_kafka.spiders import ListeningKafkaSpider
+from ..items import DmozItem
 
-from scrapy_kafka.spiders import KafkaSpider
-from example.items import DmozItem
 
-class CustomKafkaSpider(KafkaSpider):
+class CustomKafkaSpider(ListeningKafkaSpider):
     name = "dmoz_kafka"
     allowed_domains = ["dmoz.org"]
-    
+
     def parse(self, response):
         for sel in response.xpath('//ul/li'):
             item = DmozItem()
