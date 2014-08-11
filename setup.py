@@ -18,6 +18,9 @@ setup(name='scrapy-kafka',
       packages=['scrapy_kafka'],
       license='BSD',
       install_requires=install_requirements,
+      extras_require={
+          "docs": ['sphinx'],
+      },
       classifiers=[
           'Programming Language :: Python',
           'Development Status :: 4 - Beta',

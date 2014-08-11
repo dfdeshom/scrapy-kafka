@@ -8,6 +8,7 @@ from kafka.consumer import SimpleConsumer
 
 
 class KafkaSpiderMixin(object):
+
     """
     Mixin class to implement reading urls from a kafka queue.
 
@@ -19,6 +20,7 @@ class KafkaSpiderMixin(object):
         """"
         Tell this spider how to extract urls from a kafka message
 
+        :param message: A Kafka message object
         :type message: kafka.common.OffsetAndMessage
         :rtype: str or None
         """
@@ -32,6 +34,7 @@ class KafkaSpiderMixin(object):
 
         This should be called after the spider has set its crawler object.
 
+        :param settings: The current Scrapy settings being used
         :type settings: scrapy.settings.Settings
         """
         if not hasattr(self, 'topic') or not self.topic:
@@ -51,7 +54,7 @@ class KafkaSpiderMixin(object):
 
     def next_request(self):
         """
-        Returns a request to be scheduled or none.
+        Returns a request to be scheduled.
 
         :rtype: str or None
         """
@@ -78,6 +81,7 @@ class KafkaSpiderMixin(object):
 
 
 class ListeningKafkaSpider(KafkaSpiderMixin, Spider):
+
     """
     Spider that reads urls from a kafka topic when idle.
 
