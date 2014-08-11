@@ -11,5 +11,5 @@ Contributors
 -------------
 Contributors to `scrapy-kafka`, listed alphabetically:
 
-* Matthew Daniel (`@mdaniel <https://github.com/mdaniel>`__ )
-* Didier Deshommes (`@dfdeshom <https://github.com/dfdeshom>`__)
+* Matthew Daniel ([@mdaniel] (https://github.com/mdaniel) )
+* Didier Deshommes ([@dfdeshom] (https://github.com/dfdeshom))
