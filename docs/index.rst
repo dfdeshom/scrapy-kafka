@@ -6,7 +6,7 @@
 Welcome to scrapy-kafka 
 =========================
 
-Kafka-based components for Scrapy, to allow `Spider`s to read their next URL
+Kafka-based components for Scrapy, to allow Spiders to read their next URL
 from a Kafka topic and an `ItemPipeline` to store the JSON-ified `Item` back
 into a Kafka topic.
 
@@ -22,7 +22,8 @@ API reference
    :maxdepth: 2
   
    api
-
+   settings
+   
 Indices and tables
 ==================
 

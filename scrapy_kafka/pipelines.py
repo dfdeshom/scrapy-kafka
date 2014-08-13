@@ -53,7 +53,7 @@ class KafkaPipeline(object):
         :rtype: A :class:`~KafkaPipeline` instance
         """
         k_hosts = settings.get('SCRAPY_KAFKA_HOSTS', ['localhost:9092'])
-        topic = settings.get('KAFKA_ITEM_PIPELINE_TOPIC', 'scrapy_kafka_item')
+        topic = settings.get('SCRAPY_KAFKA_ITEM_PIPELINE_TOPIC', 'scrapy_kafka_item')
         kafka = KafkaClient(k_hosts)
         conn = SimpleProducer(kafka)
         return cls(conn, topic)
