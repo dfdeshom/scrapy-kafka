@@ -16,10 +16,9 @@ class KafkaLIFOQueue(object):
     def __init__(self, server, spider):
         self.server = server
         self.spider = spider
-        self.topic = "%s-%s" % (self.__class__.__name__, spider.name)
         settings = get_project_settings()
         consumer_group = settings.get('SCRAPY_KAFKA_SPIDER_CONSUMER_GROUP', 'scrapy-kafka')
-
+        self.topic = settings.get('SCRAPY_KAFKA_SCHEDULER_TOPIC', 'scrapy-scheduler')
         self.consumer = SimpleConsumer(server, consumer_group, self.topic,
                                        auto_commit=True, iter_timeout=1.0)
         self.producer = SimpleProducer(server)
@@ -29,11 +28,11 @@ class KafkaLIFOQueue(object):
         self.producer.send_messages(self.topic, msg)
 
     def pop(self):
-        for msg in self.consumer:
-            return self._decode_request(msg)
+        msg = self.consumer.get_message(True)
+        return self._decode_request(msg)
 
     def len(self):
-        pass
+        return self.consumer.pending()
 
     def _encode_request(self, request):
         """Encode a request object"""
