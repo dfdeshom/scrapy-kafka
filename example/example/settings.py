@@ -17,5 +17,6 @@ ITEM_PIPELINES = [
     'scrapy_kafka.pipelines.KafkaPipeline',
 ]
 
+SCHEDULER = 'scrapy_kafka.scheduler.KafkaScheduler'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'example (+http://www.yourdomain.com)'
