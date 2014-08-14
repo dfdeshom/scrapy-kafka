@@ -15,29 +15,26 @@ class KafkaScheduler(object):
     A Kafka-based sheduler
     """
 
-    def __init__(self, kafka_host, scheduler_topic, consumer_group,
-                 queue, dupefilter, logunser=False):
+    def __init__(self, queue, scheduler_topic, consumer_group,
+                 dupefilter, logunser=False):
         self.df = dupefilter
         self.logunser = logunser
-        self.kafka_host = kafka_host
         self.consumer_group = consumer_group
         self.scheduler_topic = scheduler_topic
         self.queue = queue
-        self.consumer = SimpleConsumer(kafka_host, consumer_group, scheduler_topic,
-                                       auto_commit=True, iter_timeout=1.0)
-        self.producer = SimpleProducer(kafka_host)
 
     @classmethod
     def from_crawler(cls, crawler):
         settings = crawler.settings
         dupefilter_cls = load_object(settings['DUPEFILTER_CLASS'])
         dupefilter = dupefilter_cls.from_settings(settings)
-        queue = KafkaLIFOQueue  # XXX for now
-        kafka_host = settings.get('SCRAPY_KAFKA_HOSTS', ['localhost:9092'])
+
+        kafka_conn = KafkaClient(settings.get('SCRAPY_KAFKA_HOSTS', ['localhost:9092']))
+        queue = KafkaLIFOQueue(kafka_conn)
         logunser = settings.getbool('LOG_UNSERIALIZABLE_REQUESTS')
         consumer_group = settings.get('SCRAPY_KAFKA_SPIDER_CONSUMER_GROUP', 'scrapy-kafka')
         scheduler_topic = settings.get('SCRAPY_KAFKA_SCHEDULER_TOPIC', 'scrapy-scheduler')
-        return cls(kafka_host, scheduler_topic, consumer_group, queue, dupefilter, logunser)
+        return cls(queue, scheduler_topic, consumer_group, dupefilter, logunser)
 
     def has_pending_requests(self):
         return len(self) > 0
