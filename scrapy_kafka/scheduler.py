@@ -1,5 +1,6 @@
 from kafka.consumer import SimpleConsumer
 from kafka.producer import SimpleProducer
+from kafka.client import KafkaClient
 
 from scrapy.utils.reqser import request_to_dict, request_from_dict
 from scrapy.utils.misc import load_object
