@@ -45,6 +45,7 @@ class KafkaScheduler(object):
         return self.df.open()
 
     def close(self, reason):
+        self.queue.close()
         return self.df.close(reason)
 
     def enqueue_request(self, request):

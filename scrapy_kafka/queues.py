@@ -37,6 +37,9 @@ class KafkaLIFOQueue(object):
         m = abs(n)
         return m
 
+    def close(self):
+        self.conn.close()
+
     def _encode_request(self, request):
         """Encode a request object"""
         return pickle.dumps(request_to_dict(request),
