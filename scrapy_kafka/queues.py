@@ -9,10 +9,10 @@ from scrapy.utils.reqser import request_to_dict, request_from_dict
 import cPickle as pickle
 
 
-class KafkaLIFOQueue(object):
+class KafkaFIFOQueue(object):
 
     """
-    Per-spider FIFO queue
+    FIFO queue based on Kafka
     """
 
     def __init__(self, conn):

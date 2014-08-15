@@ -7,7 +7,7 @@ from scrapy.utils.misc import load_object
 from scrapy.utils.job import job_dir
 from scrapy import log
 
-from queues import KafkaLIFOQueue
+from scrapy_kafka.queues import KafkaFIFOQueue
 
 
 class KafkaScheduler(object):
@@ -31,7 +31,7 @@ class KafkaScheduler(object):
         dupefilter = dupefilter_cls.from_settings(settings)
 
         kafka_conn = KafkaClient(settings.get('SCRAPY_KAFKA_HOSTS', ['localhost:9092']))
-        queue = KafkaLIFOQueue(kafka_conn)
+        queue = KafkaFIFOQueue(kafka_conn)
         logunser = settings.getbool('LOG_UNSERIALIZABLE_REQUESTS')
         consumer_group = settings.get('SCRAPY_KAFKA_SPIDER_CONSUMER_GROUP', 'scrapy-kafka')
         scheduler_topic = settings.get('SCRAPY_KAFKA_SCHEDULER_TOPIC', 'scrapy-scheduler')
