@@ -21,6 +21,9 @@ setup(name='scrapy-kafka',
       extras_require={
           "docs": ['sphinx'],
       },
+      dependency_links=[
+        'https://github.com/mumrah/kafka-python/archive/v0.9.1.tar.gz#egg=kafka-python-0.9.1',
+          ],
       classifiers=[
           'Programming Language :: Python',
           'Development Status :: 4 - Beta',
