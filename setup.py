@@ -3,7 +3,7 @@ from pkg_resources import parse_requirements
 from setuptools import setup
 
 MY_DIR = os.path.dirname(__file__)
-LONG_DESC = open(os.path.join(MY_DIR, 'README.md')).read()
+LONG_DESC = open(os.path.join(MY_DIR, 'README.rst')).read()
 req_fh = open(os.path.join(MY_DIR, 'requirements.txt'))
 install_requirements = [str(r) for r in parse_requirements(req_fh)]
 req_fh.close()
@@ -22,8 +22,8 @@ setup(name='scrapy-kafka',
           "docs": ['sphinx'],
       },
       dependency_links=[
-        'https://github.com/mumrah/kafka-python/archive/v0.9.1.tar.gz#egg=kafka-python-0.9.1',
-          ],
+          'https://github.com/mumrah/kafka-python/archive/v0.9.1.tar.gz#egg=kafka-python-0.9.1',
+      ],
       classifiers=[
           'Programming Language :: Python',
           'Development Status :: 4 - Beta',
