@@ -85,7 +85,7 @@ class ListeningKafkaSpider(KafkaSpiderMixin, Spider):
     """
     Spider that reads urls from a kafka topic when idle.
 
-    This spider will exit only it stopped, otherwise, it keeps
+    This spider will exit only if stopped, otherwise it keeps
     listening to messages on the given topic
 
     Specify the topic to listen to by setting the spider's `kafka_topic`.
