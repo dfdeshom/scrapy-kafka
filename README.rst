@@ -1,9 +1,9 @@
 scrapy-kafka
 ============
 
-Kafka-based components for Scrapy, to allow `Spider`s to read their next URL
-from a Kafka topic and an `ItemPipeline` to store the JSON-ified `Item` back
-into a Kafka topic.
+Kafka-based components for Scrapy, to allow a ``Spider`` to read their next URL
+from a Kafka topic and an ``ItemPipeline`` to store the JSON-ified ``Item`` back
+into another Kafka topic.
 
 Please see the `example`_ directory for how to use this.
 
