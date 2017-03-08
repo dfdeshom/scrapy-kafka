@@ -17,5 +17,9 @@ ITEM_PIPELINES = [
     'scrapy_kafka.pipelines.KafkaPipeline',
 ]
 
+# scrapy-kafka settings
+SCRAPY_KAFKA_HOSTS = ['localhost:9092']
+SCRAPY_KAFKA_SPIDER_CONSUMER_GROUP = 'scrapy-kafka'
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'example (+http://www.yourdomain.com)'
