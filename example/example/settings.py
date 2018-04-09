@@ -12,10 +12,10 @@ BOT_NAME = 'example'
 
 SPIDER_MODULES = ['example.spiders']
 NEWSPIDER_MODULE = SPIDER_MODULES[0]
-ITEM_PIPELINES = [
-    'example.pipelines.ExamplePipeline',
-    'scrapy_kafka.pipelines.KafkaPipeline',
-]
+ITEM_PIPELINES = {
+    'example.pipelines.ExamplePipeline': 102,
+    'scrapy_kafka.pipelines.KafkaPipeline': 103,
+}
 
 # scrapy-kafka settings
 SCRAPY_KAFKA_HOSTS = ['localhost:9092']

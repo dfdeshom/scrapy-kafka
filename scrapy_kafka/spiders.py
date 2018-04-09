@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from scrapy import signals
 from scrapy.exceptions import DontCloseSpider
-from scrapy.spider import Spider
+from scrapy.spiders import Spider
 
 from kafka.client import KafkaClient
 from kafka.consumer import SimpleConsumer
@@ -95,9 +95,9 @@ class ListeningKafkaSpider(KafkaSpiderMixin, Spider):
     method
     """
 
-    def set_crawler(self, crawler):
+    def _set_crawler(self, crawler):
         """
         :type crawler: scrapy.crawler.Crawler
         """
-        super(ListeningKafkaSpider, self).set_crawler(crawler)
+        super(ListeningKafkaSpider, self)._set_crawler(crawler)
         self.setup_kafka(crawler.settings)
